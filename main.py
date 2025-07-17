@@ -1,10 +1,12 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import threading
 import cloudscraper
 import websocket
 import json
 
 app = Flask(__name__)
+
+calorie_value = 0
 
 def get_chatroom_id(slug):
     endpoint = f"https://kick.com/api/v2/channels/{slug}"
@@ -28,6 +30,8 @@ def listen_to_kick_chat(chatroom_id):
                 if 'broadcaster' in badge_types or 'moderator' in badge_types:
                     if content.startswith('!calories'):
                         calories = content.split('!calories')[1].strip()
+                        global calorie_value
+                        calorie_value = int(calories)
                         print(f'command received: {content}')
         except Exception as e:
             print("Error:", e)
@@ -55,9 +59,9 @@ def index():
         chatroom_id = get_chatroom_id(slug)
         # Start the chat listener in a background thread
         threading.Thread(target=listen_to_kick_chat, args=(chatroom_id,), daemon=True).start()
-        return f'''Now listening for chat commands for channel: {slug}.\n
-        Add the URL 'https://calorie-counter-production-ca38.up.railway.app/overlay' to web-overlays
-         in IRL pro.\nSet width to 350 and height to 100.\nSend !calories <number> to add calories.'''
+        return f"""Now listening for chat commands for channel: {slug}.<br>
+Add the URL 'https://calorie-counter-production-ca38.up.railway.app/overlay' to web-overlays
+in IRL pro.<br>Set width to 350 and height to 100.<br>Send !calories &lt;number&gt; to add calories."""
     return '''
         <form method="post">
             Enter your kick url username: <input name="slug">
@@ -68,6 +72,11 @@ def index():
 @app.route('/overlay')
 def overlay():
     return render_template('overlay.html')
+
+@app.route('/calories')
+def get_calories():
+    global calorie_value
+    return jsonify({'calories': calorie_value})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080)

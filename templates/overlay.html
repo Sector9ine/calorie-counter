@@ -26,7 +26,15 @@
         calories consumed: <span id="calories">0</span>
     </div>
     <script>
-
+    function fetchCalories() {
+        fetch('/calories')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('calories').textContent = data.calories;
+        });
+    }
+    setInterval(fetchCalories, 2000); // Fetch every 2 seconds
+    fetchCalories(); // Initial fetch
     </script>
 </body>
 </html> 
