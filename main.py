@@ -8,7 +8,7 @@ import redis
 
 app = Flask(__name__)
 
-redis_url = os.environ.get("REDIS_URL") or os.environ.get("REDIS_CONNECTION_STRING")
+redis_url = os.environ.get("REDIS_URL")
 rdb = redis.from_url(redis_url)
 
 def get_chatroom_id(slug):
