@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import threading
 import cloudscraper
 import websocket
@@ -54,6 +54,10 @@ def index():
             <input type="submit" value="Start Listening">
         </form>
     '''
+
+@app.route('/overlay')
+def overlay():
+    return render_template('overlay.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080)
