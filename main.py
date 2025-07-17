@@ -74,15 +74,125 @@ def index():
         chatroom_id = get_chatroom_id(slug)
         # Start the chat listener in a background thread
         threading.Thread(target=listen_to_kick_chat, args=(chatroom_id,), daemon=True).start()
-        return f"""✅Success! Now listening for chat commands for channel: {slug}.<br><br>
-Add the URL 'https://calorie-counter-production-ca38.up.railway.app/overlay' to web-overlays
-in IRL pro.<br><br>Set width to 350 and height to 100.<br><br>Send !calories &lt;number&gt; to add calories.<br><br>Send !calories delete to reset."""
+        return f"""
+<html>
+<head>
+    <title>Kick Calorie Counter Ready</title>
+    <style>
+        body {{
+            background: #18122B;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }}
+        .success-container {{
+            background: #393053;
+            padding: 32px 40px;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            text-align: center;
+        }}
+        .success-container h2 {{
+            color: #7F27FF;
+            margin-bottom: 18px;
+        }}
+        .instructions {{
+            margin-top: 18px;
+            font-size: 1.1em;
+            line-height: 1.7;
+        }}
+        .url {{
+            background: #7F27FF;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 8px 0;
+        }}
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <h2>✅ Success!</h2>
+        <div class="instructions">
+            Now listening for chat commands for channel: <b>{slug}</b>.<br><br>
+            Add the URL<br>
+            <span class="url">https://calorie-counter-production-ca38.up.railway.app/overlay</span><br>
+            to web-overlays in IRL pro.<br><br>
+            Set width to <b>350</b> and height to <b>100</b>.<br><br>
+            Send <span class="url">!calories &lt;number&gt;</span> to add calories.<br>
+            Send <span class="url">!calories delete</span> to reset.
+        </div>
+    </div>
+</body>
+</html>
+"""
     return '''
-        <form method="post">
-            Enter your kick url username: <input name="slug">
-            <input type="submit" value="Start Listening">
-        </form>
-    '''
+    <html>
+    <head>
+        <title>Kick Calorie Counter Setup</title>
+        <style>
+            body {
+                background: #18122B;
+                color: #fff;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .form-container {
+                background: #393053;
+                padding: 32px 40px;
+                border-radius: 18px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+                text-align: center;
+            }
+            input[type="text"] {
+                padding: 10px 16px;
+                border-radius: 8px;
+                border: none;
+                font-size: 1.1em;
+                margin-bottom: 16px;
+                width: 220px;
+            }
+            input[type="submit"] {
+                background: #7F27FF;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 24px;
+                font-size: 1.1em;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            input[type="submit"]:hover {
+                background: #9F70FD;
+            }
+            h2 {
+                margin-bottom: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>Kick Calorie Counter Setup</h2>
+            <form method="post">
+                <input type="text" name="slug" placeholder="Enter your Kick channel username" required><br>
+                <input type="submit" value="Start Listening">
+            </form>
+        </div>
+    </body>
+    </html>
+'''
 
 @app.route('/overlay')
 def overlay():
