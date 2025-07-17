@@ -127,7 +127,7 @@ def index():
             to web-overlays in IRL pro.<br><br>
             Set width to <b>350</b> and height to <b>100</b>.<br><br>
             Send <span class="url">!calories &lt;number&gt;</span> to add calories.<br>
-            Send <span class="url">!calories delete</span> to reset.
+            Send <span class="url">!calories delete</span> to reset.<br>
             Commands are accepted from broadcasters and moderators only.
         </div>
     </div>
