@@ -32,6 +32,10 @@ def listen_to_kick_chat(chatroom_id):
                 badge_types = [badge.get("type") for badge in badges]
                 if 'broadcaster' in badge_types or 'moderator' in badge_types:
                     if content.startswith('!calories'):
+                        if content == '!calories delete':
+                            rdb.set("calories", 0)
+                            print(f'command received: {content} (new total: {0})')
+                            return
                         calories = content.split('!calories')[1].strip()
                         try:
                             add_value = int(calories)
@@ -70,9 +74,9 @@ def index():
         chatroom_id = get_chatroom_id(slug)
         # Start the chat listener in a background thread
         threading.Thread(target=listen_to_kick_chat, args=(chatroom_id,), daemon=True).start()
-        return f"""Now listening for chat commands for channel: {slug}.<br>
+        return f"""✅Success! Now listening for chat commands for channel: {slug}.<br><br>
 Add the URL 'https://calorie-counter-production-ca38.up.railway.app/overlay' to web-overlays
-in IRL pro.<br>Set width to 350 and height to 100.<br>Send !calories &lt;number&gt; to add calories."""
+in IRL pro.<br><br>Set width to 350 and height to 100.<br><br>Send !calories &lt;number&gt; to add calories.<br><br>Send !calories delete to reset."""
     return '''
         <form method="post">
             Enter your kick url username: <input name="slug">
