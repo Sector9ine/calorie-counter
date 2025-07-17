@@ -184,9 +184,9 @@ def index():
     </head>
     <body>
         <div class="form-container">
-            <h2>Kick Calorie Counter Setup</h2>
+            <h2>Enter your kick URL username</h2>
             <form method="post">
-                <input type="text" name="slug" placeholder="Enter your Kick channel username" required><br>
+                <input type="text" name="slug" required><br>
                 <input type="submit" value="Start Listening">
             </form>
         </div>
