@@ -27,6 +27,7 @@ def listen_to_kick_chat(chatroom_id):
                 badge_types = [badge.get("type") for badge in badges]
                 if 'broadcaster' in badge_types or 'moderator' in badge_types:
                     if content.startswith('!calories'):
+                        calories = content.split('!calories')[1].strip()
                         print(f'command received: {content}')
         except Exception as e:
             print("Error:", e)
@@ -54,7 +55,9 @@ def index():
         chatroom_id = get_chatroom_id(slug)
         # Start the chat listener in a background thread
         threading.Thread(target=listen_to_kick_chat, args=(chatroom_id,), daemon=True).start()
-        return f"Started listening to chat for channel: {slug}. Check your terminal for messages."
+        return f'''Now listening for chat commands for channel: {slug}.\n
+        Add the URL 'https://calorie-counter-production-ca38.up.railway.app/overlay' to web-overlays
+         in IRL pro.\nSet width to 350 and height to 100.\nSend !calories <number> to add calories.'''
     return '''
         <form method="post">
             Enter your kick url username: <input name="slug">
