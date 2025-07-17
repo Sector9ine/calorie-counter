@@ -3,10 +3,13 @@ import threading
 import cloudscraper
 import websocket
 import json
+import os
+import redis
 
 app = Flask(__name__)
 
-calorie_value = 0
+redis_url = os.environ.get("REDIS_URL") or os.environ.get("REDIS_CONNECTION_STRING")
+rdb = redis.from_url(redis_url)
 
 def get_chatroom_id(slug):
     endpoint = f"https://kick.com/api/v2/channels/{slug}"
@@ -30,9 +33,17 @@ def listen_to_kick_chat(chatroom_id):
                 if 'broadcaster' in badge_types or 'moderator' in badge_types:
                     if content.startswith('!calories'):
                         calories = content.split('!calories')[1].strip()
-                        global calorie_value
-                        calorie_value = int(calories)
-                        print(f'command received: {content}')
+                        try:
+                            add_value = int(calories)
+                        except ValueError:
+                            print(f"Invalid calorie value: {calories}")
+                            return
+                        # Get current value, add, and store
+                        current = rdb.get("calories")
+                        current_value = int(current) if current else 0
+                        new_total = current_value + add_value
+                        rdb.set("calories", new_total)
+                        print(f'command received: {content} (new total: {new_total})')
         except Exception as e:
             print("Error:", e)
 
@@ -75,8 +86,9 @@ def overlay():
 
 @app.route('/calories')
 def get_calories():
-    global calorie_value
-    return jsonify({'calories': calorie_value})
+    value = rdb.get("calories")
+    calories = int(value) if value else 0
+    return jsonify({'calories': calories})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080)
