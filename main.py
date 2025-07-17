@@ -20,7 +20,13 @@ def listen_to_kick_chat(chatroom_id):
     def on_message(ws, message):
         try:
             data = json.loads(message)
-            print(data)
+            if data.get("event") == "App\\Events\\ChatMessageEvent":
+                msg = json.loads(data["data"])
+                content = msg.get("content")
+                badges = msg.get("sender", {}).get("identity", {}).get("badges", [])
+                badge_types = [badge.get("type") for badge in badges]
+                print("Content:", content)
+                print("Badge Types:", badge_types)
         except Exception as e:
             print("Error:", e)
 
