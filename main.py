@@ -25,8 +25,9 @@ def listen_to_kick_chat(chatroom_id):
                 content = msg.get("content")
                 badges = msg.get("sender", {}).get("identity", {}).get("badges", [])
                 badge_types = [badge.get("type") for badge in badges]
-                print("Content:", content)
-                print("Badge Types:", badge_types)
+                if 'broadcaster' in badge_types or 'moderator' in badge_types:
+                    if content.startswith('!calories'):
+                        print(f'command received: {content}')
         except Exception as e:
             print("Error:", e)
 
